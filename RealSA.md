@@ -1,6 +1,6 @@
 # RealSA
 - **Source code** như sau:
-    ```python!
+    ```python
     from Crypto.Util.number import *
 
     from sage.all import *
@@ -40,45 +40,60 @@
 - Đi vào phân tích source code:
     - Để mã hóa RSA thì ta cần có được **p** và **q**, thứ mà đề sẽ không bao giờ cho =))
     - Ta sẽ thử bỏ nó lên http://factordb.com để nó phân tích thành thừa số nguyên tố, tiếc là số quá bự, web cũng không giúp được. Hầu hết những challenge RSA mình từng giải sẽ cho n khá là vừa để mình có thể dùng tool để tách ra nhưng challenge này thì không.
-![image](https://hackmd.io/_uploads/SJJrt_BAp.png)
+![Screenshot 2024-03-18 151947](https://github.com/MrBanhMi/CTF-solved/assets/155632468/75d72999-b362-4a75-ac4d-45af0868a5b3)
+
 
     - Bỏ qua việc phân tích thừa nố nguyên tố thì đề đã cho chúng ta **n**, **e**, **c** và **k**. Ta sẽ chú ý vào **k** vì **k** được tính từ **p** và **q**, nghĩa là từ biểu thức tính k ta đã có được mối quan hệ giữa q và p.
     - Ta sẽ biến đổi để tính **p** hoặc **q** như sau:
 
-        ![image](https://hackmd.io/_uploads/BJtOw_r06.png)
+        ![Screenshot 2024-03-18 151215](https://github.com/MrBanhMi/CTF-solved/assets/155632468/1fb7369c-86f4-42ce-8967-91cf34ef2661)
+
     - Vậy là chúng ta đã có được công thức để tính **q**, tính được **q** thì chúng ta sẽ lấy **n** chia cho **q** là có được **p**.
     - Nhưng ở bước này thì mình vấp cỏ khá nhiều, cụ thể như sau:
 
-        ![image](https://hackmd.io/_uploads/HJM9cuS0T.png)
+       ![Screenshot 2024-03-18 135401](https://github.com/MrBanhMi/CTF-solved/assets/155632468/7057ef20-4d4e-49f1-81f2-b645b0cbd396)
+
     - Code ở trên là code mình dùng để tính q ^ 2 tức cái này:
 
-        ![image](https://hackmd.io/_uploads/r1za9urRT.png)
-    - Nhưng ra kết quả là: ![image](https://hackmd.io/_uploads/rkDMourAT.png)
+        ![Screenshot 2024-03-18 152626](https://github.com/MrBanhMi/CTF-solved/assets/155632468/3cf0b011-2351-4ce5-896a-d6ef1e124eba)
+
+    - Nhưng ra kết quả là: ![Screenshot 2024-03-18 135407](https://github.com/MrBanhMi/CTF-solved/assets/155632468/1b8c30d0-cb8a-44b7-b9ef-80fcba096981)
+
     - Đây là số **đã được rút gọn** vì python **không thể biểu diễn** được số này, điều đó có nghĩa rằng mình không thể dùng nó để tính căn bậc hai được vì để tính căn bậc hai cần **số nguyên**.
     - **Sai lầm** ở đây là mình **bỏ quên** một dòng lệnh vô cùng quan trọng trong source code là `getcontext().prec = 1337`
     
-        ![Screenshot 2024-03-18 153055](https://hackmd.io/_uploads/BJMXn_SAa.png)
+       ![Screenshot 2024-03-18 153055](https://github.com/MrBanhMi/CTF-solved/assets/155632468/3335fb7a-a964-4954-9e85-294afff268b8)
+
     
     - `getcontext().prec = 1337` là một câu lệnh rất quan trọng, nó lấy tối đa 1337 số nguyên mà không làm tròn, bây giờ khi mình thêm nó vào thì kết quả sẽ là một con số khủng long.
 
-        ![image](https://hackmd.io/_uploads/r1KVauBC6.png)
+        ![Screenshot 2024-03-18 153654](https://github.com/MrBanhMi/CTF-solved/assets/155632468/a400dae6-5096-4fae-a58f-b07da9457774)
+
     - Mình rút kinh nghiệm là lần sau code trên source code luôn, khỏi bỏ mất code quan trọng =))
         
     - Vấn đề tiếp theo là **tính căn bậc hai** của số khổng lồ trên, lần này mình lại vấp cỏ tiếp. Mình ngây thơ tưởng rằng muốn tính căn bậc hai thì chỉ cần dùng hàm **pow(q1, 1/2)** hoặc **q1 ** 1/2**. Kết quả là nó báo lỗi vì **số quá lớn**.
-    - Bài học rút ra tiếp theo là sử dụng thư viện toán cực mạnh để tính căn bậc hai.
+  
+      ![image](https://github.com/MrBanhMi/CTF-solved/assets/155632468/6dd39480-2b8d-45ad-afc2-7f15700fc5cf)
+
+    - Bài học rút ra tiếp theo là sử dụng thư viện toán mạnh để tính căn bậc hai hoặc các phương trình phức tạp hơn.
     - Mình sẽ sử dụng thư viện **gmpy2** bằng câu lệnh `import gmpy2`. Để tính căn bậc hai thì mình sử dụng câu lệnh sau `q = gmpy2.iroot(q2, 2)[0]`
     - Kết quả sẽ là 
-![image](https://hackmd.io/_uploads/HJUMxYBAp.png)
+![Screenshot 2024-03-18 154908](https://github.com/MrBanhMi/CTF-solved/assets/155632468/0b9814d8-0b01-4bf0-a95a-81020426bf9d)
+
     - Giờ ta đã có được **q**, để tính được **p** thì ta chỉ đơn giản lấy **n** chia **q** thôi =)) nhưng không, mình lại vấp cỏ tiếp.
 
-        ![image](https://hackmd.io/_uploads/rJQrbYSC6.png)
+        ![Screenshot 2024-03-18 155408](https://github.com/MrBanhMi/CTF-solved/assets/155632468/32790731-ed6e-40c7-9011-5d87e988d5c7)
+
     - Kết quả là `1.3414305906813075e+308` =))
 
-        ![image](https://hackmd.io/_uploads/SyDaWFSRa.png)
+        ![Screenshot 2024-03-18 155615](https://github.com/MrBanhMi/CTF-solved/assets/155632468/743c4b91-534d-4cc2-9bad-a3e28816c001)
+
 
     - Nó **lại làm tròn** vì số khá là bự, mình nhớ là đã dùng `getcontext().prec = 1337` nhưng giờ nó vẫn làm tròn. Mình rút ra được bài học là thay vì dùng phép chia **/** thì nên dùng phép chia **//**, ta sửa lại thành `p = n // q` được kết quả:
     
-        ![image](https://hackmd.io/_uploads/H1XBRFB0p.png)
+        ![image](https://github.com/MrBanhMi/CTF-solved/assets/155632468/aaf5ff17-c6b2-4903-b5b3-8f04032a1d2e)
+
+
 
     - Sau bao nhiêu bão táp thì ta đã có được **p**, **q**, ta có thể dễ dàng giải được challenge này.
     - **Chú ý** là source code có dùng thư viện **Decimal**, thư viện này sẽ giúp bảo toàn giá trị của một số **Float** siêu nhỏ, vì khi python thấy một số **quá nhỏ** thì nó thường có xu hướng **làm tròn** số đó. Nhưng ở những bài toán cần sự chính xác cao thì ta nên dùng thư viện Decimal để python không làm tròn số siêu nhỏ đó:
