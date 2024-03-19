@@ -39,11 +39,11 @@
 - **Mô tả:** đây là một challenge **RSA** bình thường, bình thường ở chỗ nó cho **n**, **ct**, **e** rồi bắt tìm **flag**. Nhưng bất bình thường ở chỗ là **số** của Challenge này **quá lớn** hoặc **quá nhỏ** mà những hàm bình thường không tính được. Qua challenge này mình cũng học được một số **thư viện** và **hàm** khá là hay, mình sẽ giới thiệu sau.
 - Đi vào phân tích source code:
     - Để mã hóa RSA thì ta cần có được **p** và **q**, thứ mà đề sẽ không bao giờ cho =))
-    - Ta sẽ thử bỏ nó lên http://factordb.com để nó phân tích thành thừa số nguyên tố, tiếc là số quá bự, web cũng không giúp được. Hầu hết những challenge RSA mình từng giải sẽ cho n khá là vừa để mình có thể dùng tool để tách ra nhưng challenge này thì không.
+    - Ta sẽ thử bỏ nó lên http://factordb.com để nó phân tích thành thừa số nguyên tố, tiếc là số quá bự, web cũng không giúp được. Hầu hết những challenge RSA mình từng giải sẽ cho **n** khá là vừa để mình có thể dùng tool để tách ra nhưng challenge này thì không.
 ![Screenshot 2024-03-18 151947](https://github.com/MrBanhMi/CTF-solved/assets/155632468/75d72999-b362-4a75-ac4d-45af0868a5b3)
 
 
-    - Bỏ qua việc phân tích thừa nố nguyên tố thì đề đã cho chúng ta **n**, **e**, **c** và **k**. Ta sẽ chú ý vào **k** vì **k** được tính từ **p** và **q**, nghĩa là từ biểu thức tính k ta đã có được mối quan hệ giữa q và p.
+    - Bỏ qua việc phân tích thừa nố nguyên tố thì đề đã cho chúng ta **n**, **e**, **c** và **k**. Ta sẽ chú ý vào **k** vì **k** được tính từ **p** và **q**, nghĩa là từ biểu thức tính **k** ta đã có được mối quan hệ giữa **q** và **p**.
     - Ta sẽ biến đổi để tính **p** hoặc **q** như sau:
 
         ![Screenshot 2024-03-18 151215](https://github.com/MrBanhMi/CTF-solved/assets/155632468/1fb7369c-86f4-42ce-8967-91cf34ef2661)
@@ -53,7 +53,7 @@
 
        ![Screenshot 2024-03-18 135401](https://github.com/MrBanhMi/CTF-solved/assets/155632468/7057ef20-4d4e-49f1-81f2-b645b0cbd396)
 
-    - Code ở trên là code mình dùng để tính q ^ 2 tức cái này:
+    - Code ở trên là code mình dùng để tính **q ^ 2** tức cái này:
 
         ![Screenshot 2024-03-18 152626](https://github.com/MrBanhMi/CTF-solved/assets/155632468/3cf0b011-2351-4ce5-896a-d6ef1e124eba)
 
@@ -65,7 +65,7 @@
        ![Screenshot 2024-03-18 153055](https://github.com/MrBanhMi/CTF-solved/assets/155632468/3335fb7a-a964-4954-9e85-294afff268b8)
 
     
-    - `getcontext().prec = 1337` là một câu lệnh rất quan trọng, nó lấy tối đa 1337 số nguyên mà không làm tròn, bây giờ khi mình thêm nó vào thì kết quả sẽ là một con số khủng long.
+    - `getcontext().prec = 1337` là một câu lệnh rất quan trọng, nó lấy tối đa **1337** số nguyên mà không làm tròn, bây giờ khi mình thêm nó vào thì kết quả sẽ là một con số khủng long.
 
         ![Screenshot 2024-03-18 153654](https://github.com/MrBanhMi/CTF-solved/assets/155632468/a400dae6-5096-4fae-a58f-b07da9457774)
 
