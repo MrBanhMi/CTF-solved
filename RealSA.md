@@ -128,5 +128,7 @@
     #kết quả sẽ là: b'W1{now_you_know_how_to_use_continued_fraction!}'
     ```
 - Vậy flag của challenge này là: ***W1{now_you_know_how_to_use_continued_fraction!}***
+
+- Nguồn tham khảo: https://vanluongkma.github.io/posts/ctf-writeup/w1playground-ctf-2024/
     
 
